@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mainadev's DevOps Bug Blog</title>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --accent-green: #00ff00;
+            --border-color: #333;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #111;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--accent-green);
+        }
+        
+        .logo-icon {
+            margin-right: 0.5rem;
+            height: 30px; /* Sizing for the SVG */
+            width: auto;
+        }
+
+        .search-container {
+            flex-grow: 1;
+            margin: 0 1rem;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .search-bar {
+            background-color: #222;
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            color: var(--text-color);
+            width: clamp(200px, 50%, 400px);
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .search-bar:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .hamburger-menu {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--accent-green);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #111;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            right: -250px;
+            height: 100%;
+            padding: 2rem 1rem;
+            box-sizing: border-box;
+            transition: right 0.3s ease;
+            z-index: 1001;
+            border-left: 2px solid var(--border-color);
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            right: 0;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--accent-green);
+            color: var(--bg-color);
+        }
+        
+        .sidebar-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--accent-green);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="%23333" stroke-width="1"></path></pattern><rect width="100%" height="100%" fill="url(%23grid)" /></svg>');
+            background-size: cover;
+            background-position: center;
+            padding: 4rem 1rem;
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: bold;
+            color: var(--accent-green);
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            margin-bottom: 1rem;
+        }
+
+        .hero-marquee {
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        .marquee-content span {
+            margin: 0 1rem;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .hero-cta {
+            background-color: var(--accent-green);
+            color: var(--bg-color);
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 0 15px var(--accent-green);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .hero-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px var(--accent-green);
+        }
+        
+       
+
+        /* Main Content */
+        .main-container {
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .articles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .article-card {
+            background-color: #222;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation-fill-mode: forwards;
+            cursor: pointer; /* Make it look clickable */
+        }
+
+        .article-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.1);
+        }
+
+        .article-card .category {
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .article-card h3 {
+            font-size: 1.25rem;
+            margin: 0 0 0.5rem;
+            color: var(--text-color);
+        }
+
+        .article-card p {
+            font-size: 0.9rem;
+            margin: 0 0 1rem;
+        }
+
+        .article-card .meta {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        /* Article Modal View */
+        .article-modal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .article-modal-container.visible {
+            display: flex;
+            opacity: 1;
+        }
+
+        .article-modal {
+            background-color: #111;
+            border: 2px solid var(--accent-green);
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .article-modal-container.visible .article-modal {
+            transform: scale(1);
+        }
+
+        .article-modal-close {
+            position: sticky;
+            top: 0;
+            right: 0;
+            background-color: #111;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+            text-align: right;
+        }
+        
+        .article-modal-close i {
+            padding: 0.5rem;
+        }
+
+        .article-modal h2 {
+            font-size: 2rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #111;
+            padding: 2rem 1rem;
+            border-top: 2px solid var(--border-color);
+            color: #888;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 2rem;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+            text-align: left;
+        }
+        
+        .footer-section h4 {
+            font-size: 1rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .footer-section a:hover {
+            color: var(--accent-green);
+        }
+        
+        .footer-bottom {
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+            text-align: center;
+        }
+
+        /* Media Queries for responsiveness */
+        @media (min-width: 768px) {
+            .main-container {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <div class="logo">
+                <!-- Logo SVG with updated colors -->
+                <svg class="logo-icon" width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 4H20V20H4V4Z" stroke="var(--accent-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 8L16 16M16 8L8 16" stroke="var(--accent-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M10 16L14 16" stroke="var(--accent-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p>Mainadev's Bug Blog</p>
+            </div>
+        </div>
+        <div class="search-container">
+            <input type="search" class="search-bar" placeholder="Ctrl + F for bugs...">
+        </div>
+        <div class="hamburger-menu" id="hamburger-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-close" id="sidebar-close">
+            <i class="fas fa-times"></i>
+        </div>
+        <section>
+            <h2>Categories</h2>
+            <ul>
+                <li><a href="#">WSL & Linux</a></li>
+                <li><a href="#">DevOps</a></li>
+                <li><a href="#">Frontend Frameworks</a></li>
+                <li><a href="#">Database Servers</a></li>
+                <li><a href="#">Docker</a></li>
+                <li><a href="#">LVM</a></li>
+                <li><a href="#">Kubernetes</a></li>
+                <li><a href="#">Cloud Security</a></li>
+                <!-- New Categories -->
+                <li><a href="#">DevSecOps</a></li>
+                <li><a href="#">Application Security</a></li>
+                <li><a href="#">Ethical Hacking</a></li>
+            </ul>
+        </section>
+        <section>
+            <h2>Quick Links</h2>
+            <ul>
+                <li><a href="#">Recent Discussions</a></li>
+                <li><a href="#">Top Rated Articles</a></li>
+                <li><a href="#">Community Forum</a></li>
+                <!-- New Links -->
+                <li><a href="#">Hacks & Exploits</a></li>
+                <li><a href="#">Bug Bounty Stats</a></li>
+                <li><a href="#">Get Involved</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </section>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>The Bug Report</h1>
+            <div class="hero-marquee">
+                <div class="marquee-content">
+                    <span>- BUGS -</span>
+                    <span>- BOUNTIES -</span>
+                    <span>- GIGS -</span>
+                    <span>- EVENTS -</span>
+                    <span>- ISSUES -</span>
+                    <span>- TERMINALS -</span>
+                    <span>- FIXES -</span>
+                </div>
+            </div>
+          
+            <a href="#" class="hero-cta">Join Now</a>
+        </section>
+
+        <!-- Main content with panels -->
+        <div class="main-container">
+            <section class="articles-container">
+                <!-- Sample Articles with full content as data attributes -->
+                <div class="article-card" data-title="Understanding the 'zombie' Process in Linux" data-content="A deep dive into why your process won't die, how to identify it, and the correct way to reap it without rebooting the server. We will explore the process state machine, the 'wait()' system call, and practical debugging with 'ps' and 'top'.">
+                    <div class="category">DevOps</div>
+                    <h3>Understanding the 'zombie' Process in Linux</h3>
+                    <p>A deep dive into why your process won't die, how to identify it, and the correct way to reap it without rebooting the server.</p>
+                    <div class="meta">by Mainadev | 14 hours ago</div>
+                </div>
+                <div class="article-card" data-title="Fixing the 'permission denied' Error on Docker Mounts" data-content="Learn about common issues with user permissions and volume mounts inside Docker containers and the one flag that saves you. We'll cover user namespaces, chown commands, and the importance of consistent UIDs.">
+                    <div class="category">Docker</div>
+                    <h3>Fixing the 'permission denied' Error on Docker Mounts</h3>
+                    <p>Learn about common issues with user permissions and volume mounts inside Docker containers and the one flag that saves you.</p>
+                    <div class="meta">by A. Developer | 1 day ago</div>
+                </div>
+                <div class="article-card" data-title="Debugging a 'Cannot read properties of null' in React Hooks" data-content="A step-by-step guide to tracing null values in your component state and useEffect dependencies to prevent runtime crashes. This article will show you how to use React DevTools and proper state initialization to avoid these common bugs.">
+                    <div class="category">Frontend Frameworks</div>
+                    <h3>Debugging a 'Cannot read properties of null' in React Hooks</h3>
+                    <p>A step-by-step guide to tracing null values in your component state and useEffect dependencies to prevent runtime crashes.</p>
+                    <div class="meta">by J. Doe | 2 days ago</div>
+                </div>
+                <div class="article-card" data-title="The Case of the Slow PostgreSQL Query" data-content="An analysis of common query-planning pitfalls in PostgreSQL and how to use EXPLAIN to find and optimize the bottleneck. We'll discuss indexing strategies, join order, and the role of the query planner.">
+                    <div class="category">Database Servers</div>
+                    <h3>The Case of the Slow PostgreSQL Query</h3>
+                    <p>An analysis of common query-planning pitfalls in PostgreSQL and how to use EXPLAIN to find and optimize the bottleneck.</p>
+                    <div class="meta">by W. Smith | 3 days ago</div>
+                </div>
+                <div class="article-card" data-title="Taming the Crashing WSL2 Instance" data-content="A troubleshooting guide for developers experiencing random crashes and freezes with Windows Subsystem for Linux 2. This article covers common memory and network issues, and how to configure your WSL environment for stability.">
+                    <div class="category">WSL & Linux</div>
+                    <h3>Taming the Crashing WSL2 Instance</h3>
+                    <p>A troubleshooting guide for developers experiencing random crashes and freezes with Windows Subsystem for Linux 2.</p>
+                    <div class="meta">by M. Johnson | 4 days ago</div>
+                </div>
+                <div class="article-card" data-title="Automating with Ansible: Idempotency vs. State Drift" data-content="Examining the fine line between an idempotent playbook and a configuration that has drifted out of its desired state. We'll cover best practices for writing maintainable and predictable Ansible code.">
+                    <div class="category">DevOps</div>
+                    <h3>Automating with Ansible: Idempotency vs. State Drift</h3>
+                    <p>Examining the fine line between an idempotent playbook and a configuration that has drifted out of its desired state.</p>
+                    <div class="meta">by L. Chen | 5 days ago</div>
+                </div>
+                <div class="article-card" data-title="Multi-stage Builds: A Bug-Free Approach to Slimming Down Images" data-content="How to use multi-stage builds in Docker to create lean, production-ready images without leaving unnecessary build dependencies. This is a crucial technique for secure and efficient containerization.">
+                    <div class="category">Docker</div>
+                    <h3>Multi-stage Builds: A Bug-Free Approach to Slimming Down Images</h3>
+                    <p>How to use multi-stage builds in Docker to create lean, production-ready images without leaving unnecessary build dependencies.</p>
+                    <div class="meta">by A. Ahmed | 6 days ago</div>
+                </div>
+                <div class="article-card" data-title="Resizing LVM Volumes: When It Fails and How to Fix It" data-content="A practical walkthrough of common errors when extending or shrinking logical volumes and the commands to recover gracefully. We'll show you how to avoid common mistakes and ensure your file system remains intact.">
+                    <div class="category">LVM</div>
+                    <h3>Resizing LVM Volumes: When It Fails and How to Fix It</h3>
+                    <p>A practical walkthrough of common errors when extending or shrinking logical volumes and the commands to recover gracefully.</p>
+                    <div class="meta">by R. Singh | 1 week ago</div>
+                </div>
+                <div class="article-card" data-title="Debugging Network Policy Issues in Your K8s Cluster" data-content="How to use tools like `kubectl describe` and `netshoot` to diagnose why your pods can't communicate as expected. This guide provides a step-by-step process for troubleshooting network connectivity problems in Kubernetes.">
+                    <div class="category">Kubernetes</div>
+                    <h3>Debugging Network Policy Issues in Your K8s Cluster</h3>
+                    <p>How to use tools like `kubectl describe` and `netshoot` to diagnose why your pods can't communicate as expected.</p>
+                    <div class="meta">by K. Davis | 1 week ago</div>
+                </div>
+                <div class="article-card" data-title="Mitigating Misconfigured S3 Bucket Permissions" data-content="A checklist of common S3 bucket misconfigurations that lead to data breaches and how to lock down your resources. We'll explain the principle of least privilege and how to apply it to your cloud storage.">
+                    <div class="category">Cloud Security</div>
+                    <h3>Mitigating Misconfigured S3 Bucket Permissions</h3>
+                    <p>A checklist of common S3 bucket misconfigurations that lead to data breaches and how to lock down your resources.</p>
+                    <div class="meta">by S. Lee | 1 week ago</div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Article Modal -->
+    <div class="article-modal-container" id="article-modal-container">
+        <div class="article-modal">
+            <div class="article-modal-close" id="article-modal-close">
+                <i class="fas fa-times"></i>
+            </div>
+            <h2 id="modal-title"></h2>
+            <p id="modal-content"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Partner Institutions</h4>
+                <ul>
+                    <li><a href="https://alxafrica.com/" target="_blank" rel="noopener noreferrer">ALX Africa</a></li>
+                    <li><a href="https://ibconcept.vip/" target="_blank" rel="noopener noreferrer">ibconcept.vip</a></li>
+                    <li><a href="https://mlh.io/" target="_blank" rel="noopener noreferrer">Major League Hacking</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Bug Bounty & Security</h4>
+                <ul>
+                    <li><a href="#" target="_blank" rel="noopener noreferrer">Africa Bug Bounty</a></li>
+                    <li><a href="https://www.hackerone.com/" target="_blank" rel="noopener noreferrer">HackerOne</a></li>
+                    <li><a href="https://www.bugcrowd.com/" target="_blank" rel="noopener noreferrer">Bugcrowd</a></li>
+                    <li><a href="https://www.intigriti.com/" target="_blank" rel="noopener noreferrer">Intigriti</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>About Us</h4>
+                <ul>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Mainadev's DevOps Bug Blog | &copy; 2023. All Rights Reserved. Scant Now.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for dynamic behavior -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const hamburgerMenu = document.getElementById('hamburger-menu');
+            const sidebarClose = document.getElementById('sidebar-close');
+            
+            // Toggle sidebar on hamburger click
+            if (hamburgerMenu) {
+                hamburgerMenu.addEventListener('click', () => {
+                    sidebar.classList.add('open');
+                });
+            }
+            
+            // Close sidebar on close button click
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (event) => {
+                if (window.innerWidth <= 767 && !sidebar.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+                    sidebar.classList.remove('open');
+                }
+            });
+
+            // On-scroll reveal animation
+            const articles = document.querySelectorAll('.article-card');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.2
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            articles.forEach(article => {
+                observer.observe(article);
+            });
+
+            // Article Modal Logic
+            const articleModalContainer = document.getElementById('article-modal-container');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+
+            articles.forEach(article => {
+                article.addEventListener('click', () => {
+                    // Get data from the clicked article
+                    const title = article.getAttribute('data-title');
+                    const content = article.getAttribute('data-content');
+
+                    // Populate the modal with the article data
+                    modalTitle.textContent = title;
+                    modalContent.textContent = content;
+
+                    // Show the modal
+                    articleModalContainer.classList.add('visible');
+                });
+            });
+
+            // Close the modal
+            articleModalContainer.addEventListener('click', (event) => {
+                // Check if the click was on the overlay or the close button
+                if (event.target === articleModalContainer || event.target.closest('#article-modal-close')) {
+                    articleModalContainer.classList.remove('visible');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
